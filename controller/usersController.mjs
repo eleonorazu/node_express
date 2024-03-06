@@ -172,11 +172,11 @@ const userController = {
         return;
       }
 
-      const reservedMenuItems = menu.filter((item) =>
+      const orderMenuItems = menu.filter((item) =>
         user.orderItems.includes(item.id)
       );
 
-      const reservedMenuItemsInfo = reservedMenuItems.map((item) => ({
+      const orderMenuItemsInfo = orderMenuItems.map((item) => ({
         id: item.id,
         name: item.name,
         description: item.description,
@@ -185,7 +185,7 @@ const userController = {
         quantity:item.quantity
       }));
 
-      res.status(200).json(reservedMenuItemsInfo);
+      res.status(200).json(orderMenuItemsInfo);
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -196,6 +196,50 @@ const userController = {
   // check those 2 below!!
   orderByUserIdMenuId: async (req, res) => {
     try {
+        const userId = parseInt(req.params.userId);
+        const menuId = parseInt(req.params.menuId);
+
+        // Find user and menu
+        const user = users.find((user) => user.id === userId);
+        const menu = menu.find((menu) => menu.id === menuId);
+
+        // If user or menu not found, return 404
+        if (!user || !menu) {
+            res.status(404).json({ message: "User or menu item not found." });
+            return;
+        }
+
+        // Push new menu item to orderItems with count 1
+        user.orderItems.push({ menuId, count: 1 });
+
+        // Update menu quantity
+        menu.quantity--;
+
+        // If menu quantity becomes 0, update status
+        if (menu.quantity === 0) {
+            res.status(200).json({ message: "Out of stock. Please contact the supplier to restock item." });
+            return;
+        }
+
+        // Write updated data to files
+        await fs.promises.writeFile(
+            path.join(__dirname, "../db/users.json"),
+            JSON.stringify(users, null, 2)
+        );
+
+        await fs.promises.writeFile(
+            path.join(__dirname, "../db/menu.json"),
+            JSON.stringify(menu, null, 2)
+        );
+
+        res.status(200).json({ message: "Item successfully added to the order." });
+    } catch (error) {
+        console.error("Error creating order:", error); // Log the error for debugging
+        res.status(500).json({ message: "An error occurred while creating the order." });
+    }
+},
+  deleteOrden: async (req, res) => {
+    try {
       const userId = parseInt(req.params.userId);
       const menuId = parseInt(req.params.menuId);
 
@@ -203,74 +247,27 @@ const userController = {
       const menu = menu.find((menu) => menu.id === menuId);
 
       if (!user || !menu) {
-        res.status(404).json({ message: "User or menu item are not found." });
-        return;
-      }
-
-      if (user.orderItems.includes(menuId)) {
-        res
-          .status(400)
-          .json({ message: "item already added to the order." });
-        return;
-      }
-
-      user.orderItems.push(menuId);
-
-      // Mano kiekis knygų turėtu sumažėti, kai vartotojas įkelia pas saves į rezervacija
-      book.quantity--;
-
-      if (book.quantity === 0) {
-        book.available = false;
-      }
-
-      await fs.promises.writeFile(
-        path.join(__dirname, "../db/users.json"),
-        JSON.stringify(users, null, 2)
-      );
-
-      await fs.promises.writeFile(
-        path.join(__dirname, "../db/books.json"),
-        JSON.stringify(books, null, 2)
-      );
-
-      res.status(200).json({ message: "Book successfully reserved." });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: "An error occurred while creating the reservation." });
-    }
-  },
-  deleteReservation: async (req, res) => {
-    try {
-      const userId = parseInt(req.params.userId);
-      const menuId = parseInt(req.params.menuId);
-
-      const user = users.find((user) => user.id === userId);
-      const book = menu.find((menu) => menu.id === menuId);
-
-      if (!user || !menu) {
         res.status(404).json({ message: "User or menu item is not found" });
         return;
       }
-      const reservationIndex = user.orderItems.indexOf(menuId);
-      if (reservationIndex === -1) {
-        res.status(400).json({ message: "Book is not reserved by the user" });
+      const orderIndex = user.orderItems.indexOf(menuId);
+      if (orderIndex === -1) {
+        res.status(400).json({ message: "Item is not reserved by the user" });
         return;
       }
-      users.reservation.splice(reservationIndex, 1);
-      book.quantity++;
-      book.available = true;
+      users.orderItems.splice(orderIndex, 1);
+      menu.quantity++;
       await fs.promises.writeFile(
         path.join(__dirname, "../db/users.json"),
         JSON.stringify(users, null, 2)
       );
       await fs.promises.writeFile(
         path.join(__dirname, "../db/books.json"),
-        JSON.stringify(books, null, 2)
+        JSON.stringify(menu, null, 2)
       );
-      res.status(200).json({ message: "Book successfully returned" });
+      res.status(200).json({ message: "Item successfully cancelled" });
     } catch (error) {
-      res.status(500).json({ message: "Reservation wasn't deleted" });
+      res.status(500).json({ message: "Order wasn't cancelled" });
     }
   },
 };
