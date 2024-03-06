@@ -90,8 +90,7 @@ const userController = {
       }
 
       // Mums reikia išsaugoti sukurimo datos ir vartotojo rezervacijos
-      updateUser.registered_on = users[userIndex].registered_on;
-      updateUser.reservation = users[userIndex].reservation;
+      updateUser.orderItems = users[userIndex].orderItems;
 
       users[userIndex] = updateUser;
 
@@ -197,20 +196,20 @@ const userController = {
   orderByUserIdMenuId: async (req, res) => {
     try {
         const userId = parseInt(req.params.userId);
-        const menuId = parseInt(req.params.menuId);
+        const itemId = parseInt(req.params.itemId);
 
         // Find user and menu
         const user = users.find((user) => user.id === userId);
-        const menu = menu.find((menu) => menu.id === menuId);
+        const item = menu.find((item) => item.id === itemId);
 
         // If user or menu not found, return 404
-        if (!user || !menu) {
+        if (!user || !item) {
             res.status(404).json({ message: "User or menu item not found." });
             return;
         }
 
         // Push new menu item to orderItems with count 1
-        user.orderItems.push({ menuId, count: 1 });
+        user.orderItems.push(itemId);
 
         // Update menu quantity
         menu.quantity--;
@@ -238,19 +237,19 @@ const userController = {
         res.status(500).json({ message: "An error occurred while creating the order." });
     }
 },
-  deleteOrden: async (req, res) => {
+  deleteOrder: async (req, res) => {
     try {
       const userId = parseInt(req.params.userId);
-      const menuId = parseInt(req.params.menuId);
+      const itemId = parseInt(req.params.itemId);
 
       const user = users.find((user) => user.id === userId);
-      const menu = menu.find((menu) => menu.id === menuId);
+      const item = menu.find((item) => item.id === itemId);
 
-      if (!user || !menu) {
+      if (!user || !item) {
         res.status(404).json({ message: "User or menu item is not found" });
         return;
       }
-      const orderIndex = user.orderItems.indexOf(menuId);
+      const orderIndex = user.orderItems.indexOf(itemId);
       if (orderIndex === -1) {
         res.status(400).json({ message: "Item is not reserved by the user" });
         return;

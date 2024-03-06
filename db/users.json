@@ -1,41 +1,12 @@
 [
   {
-    "id": 1,
-    "name": "John Doe",
-    "email": "testas6@example.com",
-    "password": "Testas6",
-    "phone_number": "5685258",
-    "address": "test str.8-23",
-    "orderItems": [
-      1
-    ]
-  },
-  {
-    "id": 2,
-    "name": "Johny Depp",
-    "email": "testas65@example1.com",
-    "password": "Testas612",
-    "phone_number": "5685258",
-    "address": "test str.8-213",
-    "orderItems": []
-  },
-  {
-    "id": 3,
     "name": "Mary Jane",
-    "email": "tmj6@example.com",
-    "password": "Testas45877",
-    "phone_number": "5d685258",
-    "address": "test str.81-23",
-    "orderItems": []
-  },
-  {
-    "name": "Mary Jane",
-    "email": "tmj6@example.com",
-    "password": "Testas45877",
+    "email": "mj@example.com",
+    "password": "mjpassword22",
     "phone_number": "5d685258",
     "address": "test str.81-23",
     "orderItems": [],
-    "id": 4
+    "id": 1
   },
   {
     "name": "Margot Robby",
@@ -44,7 +15,7 @@
     "phone_number": "8685258",
     "address": "test str.11-23",
     "orderItems": [],
-    "id": 5
+    "id": 2
   },
   {
     "name": "John Doe1",
@@ -53,6 +24,15 @@
     "phone_number": "5685258",
     "address": "test str.8-23",
     "orderItems": [],
-    "id": 6
+    "id": 3
+  },
+  {
+    "name": "Johny Depp",
+    "email": "testas6o@example.com",
+    "password": "Testas4886",
+    "phone_number": "568485258",
+    "address": "test str.10-23",
+    "orderItems": [],
+    "id": 4
   }
 ]

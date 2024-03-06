@@ -9,7 +9,7 @@ import path, { dirname } from "path";
 // konvertuojame failo url į failo kelia
 import { fileURLToPath } from "url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname1 = dirname(fileURLToPath(import.meta.url));
 const menuController = {
   getMenu: (req, res) => {
     try {
@@ -40,13 +40,13 @@ const menuController = {
         ...req.body
       };
 
-      users.push(newMenu);
-      users.forEach((menu, index) => {
+      menu.push(newMenu);
+      menu.forEach((menu, index) => {
         menu.id = index + 1;
       });
 
       await fs.promises.writeFile(
-        path.join(__dirname, "../db/menu.json"),
+        path.join(__dirname1, "../db/menu.json"),
         JSON.stringify(menu, null, 2)
       );
 
@@ -61,14 +61,14 @@ const menuController = {
   getMenuById: (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const menu = users.find((menu) => menu.id === id);
+      const item = menu.find((item) => item.id === id);
 
-      if (!menu) {
+      if (!item) {
         res.status(404).json({ message: "Item not found." });
         return;
       }
 
-      res.status(200).json(user);
+      res.status(200).json(item);
     } catch (error) {
       res.status(500).json({
         message: "An error occurred while retrieving the item by id.",
@@ -80,15 +80,15 @@ const menuController = {
       const id = parseInt(req.params.id);
       const updateMenu = { ...req.body, id };
 
-      let menuIndex = menu.findIndex((menu) => menu.id === id);
+      let itemIndex = menu.findIndex((item) => item.id === id);
 
-      if (menuIndex === -1) {
+      if (itemIndex === -1) {
         res.status(404).json({ message: "Item not found." });
         return;
       }
-
+      menu[itemIndex] = updateMenu;
       await fs.promises.writeFile(
-        path.join(__dirname, "../db/menu.json"),
+        path.join(__dirname1, "../db/menu.json"),
         JSON.stringify(menu, null, 2)
       );
 
@@ -105,21 +105,21 @@ const menuController = {
       const id = parseInt(req.params.id);
       const updatedFields = req.body;
 
-      let menuIndex = menu.findIndex((menu) => menu.id === id);
+      let itemIndex = menu.findIndex((item) => item.id === id);
 
-      if (menuIndex === -1) {
+      if (itemIndex === -1) {
         res.status(404).json({ message: "item not found." });
         return;
       }
 
-      menu[menuIndex] = { ...menu[menuIndex], ...updatedFields };
+      menu[itemIndex] = { ...menu[itemIndex], ...updatedFields };
 
       await fs.promises.writeFile(
-        path.join(__dirname, "../db/menu.json"),
+        path.join(__dirname1, "../db/menu.json"),
         JSON.stringify(menu, null, 2)
       );
 
-      res.status(200).json(menu[menuIndex]);
+      res.status(200).json(menu[itemIndex]);
     } catch (error) {
       console.error(error);
       res
@@ -131,17 +131,17 @@ const menuController = {
     try {
       const id = parseInt(req.params.id);
 
-      let menuIndex = menu.findIndex((menu) => menu.id === id);
+      let itemIndex = menu.findIndex((item) => item.id === id);
 
-      if (menuIndex === -1) {
+      if (itemIndex === -1) {
         res.status(404).json({ message: "Item not found." });
         return;
       }
 
-      users.splice(menuIndex, 1);
+      menu.splice(itemIndex, 1);
 
       await fs.promises.writeFile(
-        path.join(__dirname, "../db/menu.json"),
+        path.join(__dirname1, "../db/menu.json"),
         JSON.stringify(menu, null, 2)
       );
 
