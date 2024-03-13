@@ -1,0 +1,22 @@
+[
+  {
+    "id": 2,
+    "customerId": 2,
+    "Items": [
+      {
+        "menuItemId": 2,
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "customerId": 2,
+    "Items": [
+      {
+        "menuItemId": 1,
+        "quantity": 1
+      }
+    ]
+  }
+]

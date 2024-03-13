@@ -10,8 +10,8 @@ const PORT = 3000;
 app.use(express.json());
 
 // Use routers
-app.use('/api/v1/library/users', userRouter);
-app.use('/api/v1/library/menu', menuRouter);
+app.use('/api/v1/restaurant/users', userRouter);
+app.use('/api/v1/restaurant/menu', menuRouter);
 
 // Start the server
 app.listen(PORT, () => {

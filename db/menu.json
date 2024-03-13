@@ -4,15 +4,13 @@
     "name": "burger",
     "description": "beef patty burger",
     "price": 9,
-    "category": "main course",
-    "quantity": 10
+    "category": "main course"
   },
   {
     "name": "burger",
     "description": "beef patty burger",
     "price": 9,
     "category": "main course",
-    "quantity": 999,
     "id": 2
   },
   {
@@ -20,7 +18,6 @@
     "description": "delicious chicken soup with homemade noodles",
     "price": 4,
     "category": "soup",
-    "quantity": 11,
     "id": 3
   },
   {
@@ -28,7 +25,6 @@
     "description": "salad with lettuce, cruttons and cheese",
     "price": 7,
     "category": "salad",
-    "quantity": 17,
     "id": 4
   },
   {
@@ -36,7 +32,6 @@
     "description": "cake",
     "price": 20,
     "category": "dessert",
-    "quantity": 17,
     "id": 5
   },
   {
@@ -44,7 +39,6 @@
     "description": "pizza",
     "price": 10,
     "category": "main course",
-    "quantity": 17,
     "id": 6
   }
 ]

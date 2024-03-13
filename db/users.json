@@ -5,7 +5,9 @@
     "password": "mjpassword22",
     "phone_number": "5d685258",
     "address": "test str.81-23",
-    "orderItems": [],
+    "orderItems": [
+      2
+    ],
     "id": 1
   },
   {
@@ -14,7 +16,12 @@
     "password": "Te45877",
     "phone_number": "8685258",
     "address": "test str.11-23",
-    "orderItems": [],
+    "orderItems": [
+      2,
+      2,
+      2,
+      4
+    ],
     "id": 2
   },
   {
@@ -34,5 +41,23 @@
     "address": "test str.10-23",
     "orderItems": [],
     "id": 4
+  },
+  {
+    "name": "Jo Dell",
+    "email": "s6o@example.com",
+    "password": "tas4886",
+    "phone_number": "5685258",
+    "address": "test str.10-223",
+    "orderItems": [],
+    "id": 5
+  },
+  {
+    "name": "Jonathan Denns",
+    "email": "mms6o@example.com",
+    "password": "mtas4886",
+    "phone_number": "85258",
+    "address": "tate str.10-223",
+    "orderItems": [],
+    "id": 6
   }
 ]

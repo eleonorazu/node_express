@@ -1,6 +1,7 @@
 
 import users from "../db/users.json" assert { type: "json" };
 import menu from "../db/menu.json" assert { type: "json" };
+import orders from "../db/orders.json" assert { type: "json" };
 
 // Darbas su file systema
 import fs from "fs";
@@ -39,8 +40,8 @@ const userController = {
     try {
       const newUser = {
         ...req.body,
-        orderItems: [],
-      };
+        orderItems: []
+      }
 
       users.push(newUser);
       users.forEach((user, index) => {
@@ -50,9 +51,9 @@ const userController = {
       await fs.promises.writeFile(
         path.join(__dirname, "../db/users.json"),
         JSON.stringify(users, null, 2)
-      );
+      )
 
-      res.status(201).json(newUser);
+      res.status(201).json(newUser)
     } catch (error) {
       console.error(error);
       res
@@ -192,83 +193,93 @@ const userController = {
       });
     }
   },
-  // check those 2 below!!
+  
   orderByUserIdMenuId: async (req, res) => {
     try {
-        const userId = parseInt(req.params.userId);
-        const itemId = parseInt(req.params.itemId);
+        const userId = Number(req.params.userId);
+        const itemId = Number(req.query.itemId);
+        const quantity = Number(req.query.quantity);
+    
 
-        // Find user and menu
-        const user = users.find((user) => user.id === userId);
-        const item = menu.find((item) => item.id === itemId);
+        const user = users.find(user => user.id === userId);
+        const item = menu.find(item => item.id === itemId);
 
-        // If user or menu not found, return 404
         if (!user || !item) {
-            res.status(404).json({ message: "User or menu item not found." });
+            res.status(404).json({ message: 'User or Menu item were not found.' });
             return;
         }
 
-        // Push new menu item to orderItems with count 1
-        user.orderItems.push(itemId);
+        // const maxOrderId = Math.max(...orders.map(order => order.id)); Nustatome orderio id. paimame dydziausia id is jau turimu orderiu
 
-        // Update menu quantity
-        menu.quantity--;
-
-        // If menu quantity becomes 0, update status
-        if (menu.quantity === 0) {
-            res.status(200).json({ message: "Out of stock. Please contact the supplier to restock item." });
-            return;
+        let maxOrderId;
+        if (orders.length > 0) {
+            maxOrderId = Math.max(...orders.map(order => order.id));
+        } else {
+            maxOrderId = 0;
         }
 
-        // Write updated data to files
-        await fs.promises.writeFile(
-            path.join(__dirname, "../db/users.json"),
-            JSON.stringify(users, null, 2)
-        );
+        //pridedame 1 kad tureti sekanti id
+        const orderToSave = {
+            id: maxOrderId + 1, //  Naujo orderio id sukurimas
+            customerId: userId,
+            Items: []
+        }
+//pashinam ir saugome i users tik itemId o i orders info orderToSave + tai ka gauname is requesto (menuItemId ir quantity)
+        orderToSave.Items.push({
+            menuItemId:itemId,
+            quantity: quantity
+        });
 
-        await fs.promises.writeFile(
-            path.join(__dirname, "../db/menu.json"),
-            JSON.stringify(menu, null, 2)
-        );
+        orders.push(orderToSave);
 
-        res.status(200).json({ message: "Item successfully added to the order." });
+        user.orderItems.push(orderToSave.id);
+
+        await fs.promises.writeFile(path.join(__dirname, '../db/orders.json'), JSON.stringify(orders, null, 2));
+
+        await fs.promises.writeFile(path.join(__dirname, '../db/users.json'), JSON.stringify(users, null, 2));
+
+        res.status(201).json(orderToSave)
     } catch (error) {
-        console.error("Error creating order:", error); // Log the error for debugging
-        res.status(500).json({ message: "An error occurred while creating the order." });
+        console.log(error);
+        res.status(500).json({ message: 'An error occurred while creating the order.' })
     }
 },
-  deleteOrder: async (req, res) => {
-    try {
+deleteOrder: async (req, res) => {
+  try {
       const userId = parseInt(req.params.userId);
-      const itemId = parseInt(req.params.itemId);
+      const orderId = parseInt(req.params.orderId);
 
-      const user = users.find((user) => user.id === userId);
-      const item = menu.find((item) => item.id === itemId);
-
-      if (!user || !item) {
-        res.status(404).json({ message: "User or menu item is not found" });
-        return;
+      const userIndex = users.findIndex((user) => user.id === userId);
+      if (userIndex === -1) {
+          res.status(404).json({ message: "User not found." });
+          return;
       }
-      const orderIndex = user.orderItems.indexOf(itemId);
+
+      const orderIndex = orders.findIndex((order) => order.id === orderId);
       if (orderIndex === -1) {
-        res.status(400).json({ message: "Item is not reserved by the user" });
-        return;
+          res.status(404).json({ message: "Order not found." });
+          return;
       }
-      users.orderItems.splice(orderIndex, 1);
-      menu.quantity++;
+
+      users[userIndex].orderItems = users[userIndex].orderItems.filter(id => id !== orderId);
+      orders.splice(orderIndex, 1);
+
       await fs.promises.writeFile(
-        path.join(__dirname, "../db/users.json"),
-        JSON.stringify(users, null, 2)
+          path.join(__dirname, "../db/users.json"),
+          JSON.stringify(users, null, 2)
       );
+
       await fs.promises.writeFile(
-        path.join(__dirname, "../db/books.json"),
-        JSON.stringify(menu, null, 2)
+          path.join(__dirname, "../db/orders.json"),
+          JSON.stringify(orders, null, 2)
       );
+
       res.status(200).json({ message: "Item successfully cancelled" });
-    } catch (error) {
+  } catch (error) {
+      console.error(error);
       res.status(500).json({ message: "Order wasn't cancelled" });
-    }
-  },
+  }
+},
 };
 
 export default userController;
