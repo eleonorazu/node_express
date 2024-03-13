@@ -26,7 +26,7 @@ router.delete('/:id',userController.deleteUser );
 
 router.get("/:id/orders",userController.getOrders );
 
-router.post("/:userId/orders/:menuId",userController.orderByUserIdMenuId );
-router.delete("/:userId/orders/:menuId",userController.deleteOrder);
+router.post("/:userId/orders",userController.orderByUserIdMenuId );
+router.delete("/:userId/orders/:orderId",userController.deleteOrder);
 
 export default router;
