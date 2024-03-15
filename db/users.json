@@ -59,5 +59,14 @@
     "address": "tate str.10-223",
     "orderItems": [],
     "id": 6
+  },
+  {
+    "name": "111",
+    "email": "mms6o@example.com",
+    "password": "mT+s0",
+    "phone_number": "789955",
+    "address": "tate str.10-223",
+    "orderItems": [],
+    "id": 7
   }
 ]
