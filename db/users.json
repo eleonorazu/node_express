@@ -2,7 +2,7 @@
   {
     "name": "Mary Jane",
     "email": "mj@example.com",
-    "password": "mjpassword22",
+    "password": "mjpass+Aword22",
     "phone_number": "5d685258",
     "address": "test str.81-23",
     "orderItems": [
@@ -20,7 +20,11 @@
       2,
       2,
       2,
-      4
+      4,
+      5,
+      6,
+      7,
+      8
     ],
     "id": 2
   },
@@ -68,5 +72,14 @@
     "address": "tate str.10-223",
     "orderItems": [],
     "id": 7
+  },
+  {
+    "name": "111",
+    "email": "mms6o@example.com",
+    "password": "mT+s0",
+    "phone_number": "789955",
+    "address": "tate str.10-223",
+    "orderItems": [],
+    "id": 8
   }
 ]

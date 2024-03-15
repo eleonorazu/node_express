@@ -50,8 +50,3 @@ export const validateUserId = [
         .withMessage('ID must be an integer')
 ];
 
-export const validateReservationParams = [
-    param('userId')
-        .isInt()
-        .withMessage('User ID must be am imteger')
-];
