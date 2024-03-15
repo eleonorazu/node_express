@@ -1,32 +1,29 @@
-import express from 'express';
-import userController from '../controller/usersController.mjs';
+import express from "express";
 
+import userController from "../controller/usersController.mjs";
+import { validate } from "../middleware/userValidationScheme.mjs";
+import { userValidationSchema, validateUserId, validateReservationParams } from "../Validators/userValidator.mjs";
 
 const router = express.Router();
+router.get("/", userController.getUsers);
 
-// router.get('/users', (req, res) => {
-//     try {
-//         res.status(200).json(users)
-//     } catch (error) {
-//         res.status(500).json({ message: 'An error occurred while retrieving users.' })
-//     }
-// });
+router.post(
+  "/register",
+  validate(userValidationSchema),
+  userController.createUser
+);
 
-router.get('/',userController.getUsers);
+router.get("/:id", userController.getUserById);
 
-router.post('/register',userController.createUser);
+router.put("/:id", userController.updateUser);
 
-router.get('/:id', userController.getUserById);
+router.patch("/:id", userController.updateUserById);
 
-router.put('/:id',userController.updateUser);
+router.delete("/:id", userController.deleteUser);
 
-router.patch('/:id',userController.updateUserById );
+router.get("/:id/orders", userController.getOrders);
 
-router.delete('/:id',userController.deleteUser );
-
-router.get("/:id/orders",userController.getOrders );
-
-router.post("/:userId/orders",userController.orderByUserIdMenuId );
-router.delete("/:userId/orders/:orderId",userController.deleteOrder);
+router.post("/:userId/orders", userController.orderByUserIdMenuId);
+router.delete("/:userId/orders/:orderId", userController.deleteOrder);
 
 export default router;
