@@ -2,7 +2,10 @@ import express from "express";
 
 import userController from "../controller/usersController.mjs";
 import { validate } from "../middleware/userValidationScheme.mjs";
-import { userValidationSchema, validateUserId } from "../Validators/userValidator.mjs";
+import {
+  userValidationSchema,
+  validateUserId,
+} from "../Validators/userValidator.mjs";
 
 const router = express.Router();
 router.get("/", userController.getUsers);
@@ -12,9 +15,9 @@ router.post(
   validate(userValidationSchema, validateUserId),
   userController.createUser
 );
-router.post('/login', userController.login);
+router.post("/login", userController.login);
 
-router.post('/logout', userController.logout);
+router.post("/logout", userController.logout);
 
 router.get("/:id", userController.getUserById);
 
