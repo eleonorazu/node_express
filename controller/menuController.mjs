@@ -1,5 +1,4 @@
 import menu from "../db/menu.json" assert { type: "json" };
-import users from "../db/users.json" assert { type: "json" };
 
 // Darbas su file systema
 import fs from "fs";
@@ -9,7 +8,7 @@ import path, { dirname } from "path";
 // konvertuojame failo url į failo kelia
 import { fileURLToPath } from "url";
 
-const __dirname1 = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const menuController = {
   getMenu: (req, res) => {
     try {
@@ -37,7 +36,7 @@ const menuController = {
   createMenu: async (req, res) => {
     try {
       const newMenu = {
-        ...req.body
+        ...req.body,
       };
 
       menu.push(newMenu);
@@ -46,7 +45,7 @@ const menuController = {
       });
 
       await fs.promises.writeFile(
-        path.join(__dirname1, "../db/menu.json"),
+        path.join(__dirname, "../db/menu.json"),
         JSON.stringify(menu, null, 2)
       );
 
@@ -88,7 +87,7 @@ const menuController = {
       }
       menu[itemIndex] = updateMenu;
       await fs.promises.writeFile(
-        path.join(__dirname1, "../db/menu.json"),
+        path.join(__dirname, "../db/menu.json"),
         JSON.stringify(menu, null, 2)
       );
 
@@ -141,7 +140,7 @@ const menuController = {
       menu.splice(itemIndex, 1);
 
       await fs.promises.writeFile(
-        path.join(__dirname1, "../db/menu.json"),
+        path.join(__dirname, "../db/menu.json"),
         JSON.stringify(menu, null, 2)
       );
 
